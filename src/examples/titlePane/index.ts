@@ -30,6 +30,8 @@ const createApp = createWidgetBase.mixin(internalState).mixin({
 	}
 });
 
-createApp.mixin(createProjectorMixin)().append().then(() => {
+createApp.mixin(createProjectorMixin)({
+	cssTransitions: true
+}).append().then(() => {
 	console.log('projector is attached');
 });
