@@ -1,3 +1,4 @@
+import createTitlePanel from './components/titlePanel/createTitlePanel';
 import Dialog from './dialog/Dialog';
 import SlidePane from './slidepane/SlidePane';
 import Label from './label/Label';
@@ -9,6 +10,7 @@ import Radio from './radio/Radio';
 import Slider from './slider/Slider';
 
 export {
+	createTitlePanel,
 	Dialog,
 	SlidePane,
 	Label,
