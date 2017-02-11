@@ -6,7 +6,6 @@ registerSuite({
 	name: 'main',
 
 	api() {
-		assert.isDefined(widgets.createTitlePanel);
 		assert.isDefined(widgets.Dialog);
 		assert.isDefined(widgets.SlidePane);
 		assert.isDefined(widgets.Label);
@@ -16,5 +15,6 @@ registerSuite({
 		assert.isDefined(widgets.Checkbox);
 		assert.isDefined(widgets.Radio);
 		assert.isDefined(widgets.Slider);
+		assert.isDefined(widgets.TitlePane);
 	}
 });

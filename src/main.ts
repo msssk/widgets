@@ -1,4 +1,3 @@
-import createTitlePanel from './components/titlePanel/createTitlePanel';
 import Dialog from './dialog/Dialog';
 import SlidePane from './slidepane/SlidePane';
 import Label from './label/Label';
@@ -8,9 +7,9 @@ import Textarea from './textarea/Textarea';
 import Checkbox from './checkbox/Checkbox';
 import Radio from './radio/Radio';
 import Slider from './slider/Slider';
+import TitlePane from './components/titlepane/TitlePane';
 
 export {
-	createTitlePanel,
 	Dialog,
 	SlidePane,
 	Label,
@@ -19,5 +18,6 @@ export {
 	Textarea,
 	Checkbox,
 	Radio,
-	Slider
+	Slider,
+	TitlePane
 };
