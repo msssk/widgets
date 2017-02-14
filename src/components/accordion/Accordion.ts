@@ -1,7 +1,7 @@
 import WidgetBase from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 import { DNode } from '@dojo/widget-core/interfaces';
-import { ThemeableMixin, ThemeableProperties } from '@dojo/widget-core/mixins/Themeable';
+import { theme, ThemeableMixin, ThemeableProperties } from '@dojo/widget-core/mixins/Themeable';
 
 import * as css from './styles/accordion.css';
 
@@ -11,6 +11,7 @@ export interface AccordionProperties extends ThemeableProperties {
 
 export const AccordionBase = ThemeableMixin(WidgetBase);
 
+@theme(css)
 export default class Accordion extends AccordionBase<AccordionProperties> {
 	render(): DNode {
 		// TODO: should accordion assign keys to children, or should the already be assigned?
