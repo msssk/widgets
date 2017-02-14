@@ -1,0 +1,7 @@
+@import '../../../styles/variables.css';
+
+.accordion {
+	border-color: var(--dojo-shade-gray);
+	border-style: solid;
+	border-width: var(--border-width-thin);
+}
