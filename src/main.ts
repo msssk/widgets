@@ -7,7 +7,7 @@ import Textarea from './textarea/Textarea';
 import Checkbox from './checkbox/Checkbox';
 import Radio from './radio/Radio';
 import Slider from './slider/Slider';
-import TitlePane from './components/titlepane/TitlePane';
+import TitlePane from './titlepane/TitlePane';
 
 export {
 	Dialog,
