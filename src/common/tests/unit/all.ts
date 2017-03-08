@@ -1,6 +1,7 @@
 import './main';
 import '../../../dialog/tests/unit/Dialog';
 import '../../../slidepane/tests/unit/SlidePane';
+import '../../../titlepane/tests/unit/TitlePane';
 import '../../../label/tests/unit/Label';
 import '../../../button/tests/unit/Button';
 import '../../../textinput/tests/unit/TextInput';
