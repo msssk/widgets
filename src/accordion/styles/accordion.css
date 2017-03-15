@@ -1,6 +1,6 @@
-@import '../../../styles/variables.css';
+@import '../../common/styles/variables.css';
 
-.accordion {
+.root {
 	border-color: var(--dojo-shade-gray);
 	border-style: solid;
 	border-width: var(--border-width-thin);

@@ -1,1 +1,1 @@
-export const accordion: string;
+export const root: string;
