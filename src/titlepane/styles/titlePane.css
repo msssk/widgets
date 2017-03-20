@@ -13,7 +13,7 @@
 	background-color: var(--title-bar-bg);
 	border-color: var(--title-bar-bg);
 	border-style: solid;
-	border-width: var(--border-width-thin);
+	border-width: var(--border-thin);
 	color: var(--title-bar-color);
 	font-size: var(--title-bar-font-size);
 	padding: var(--title-padding);
@@ -26,9 +26,9 @@
 }
 
 .content {
-	border-color: var(--title-bar-bg);
-	border-style: solid;
-	border-width: var(--border-width-thin);
+	border-right: var(--border-thin) solid var(--title-bar-bg);
+	border-bottom: var(--border-thin) solid var(--title-bar-bg);
+	border-left: var(--border-thin) solid var(--title-bar-bg);
 	padding: var(--container-padding);
 	transition: margin-top ease-in-out var(--short-animation-duration);
 }
