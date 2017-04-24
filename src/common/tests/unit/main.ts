@@ -15,7 +15,6 @@ registerSuite({
 		assert.isDefined(widgets.Radio);
 		assert.isDefined(widgets.SlidePane);
 		assert.isDefined(widgets.Slider);
-		assert.isDefined(widgets.ComboBox);
 		assert.isDefined(widgets.Select);
 		assert.isDefined(widgets.Textarea);
 		assert.isDefined(widgets.TextInput);
