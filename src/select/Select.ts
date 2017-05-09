@@ -411,7 +411,7 @@ export default class Select extends SelectBase<SelectProperties> {
 
 		if (label) {
 			rootWidget = w(Label, {
-				classes: this.classes(css.root, ...stateClasses),
+				extraClasses: this.classes(css.root, ...stateClasses),
 				formId,
 				label,
 				registry: this._registry,
