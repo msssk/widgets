@@ -1,39 +1,122 @@
 import * as registerSuite from 'intern!object';
 import * as assert from 'intern/chai!assert';
-import { VNode } from '@dojo/interfaces/vdom';
-import TextInput from '../../TextInput';
+import * as Test from 'intern/lib/Test';
+
+import has from '@dojo/has/has';
+import harness, { Harness } from '@dojo/test-extras/harness';
+import { v } from '@dojo/widget-core/d';
+
+import TextInput, { TextInputProperties } from '../../TextInput';
 import * as css from '../../styles/textinput.m.css';
+
+let widget: Harness<TextInputProperties, typeof TextInput>;
 
 registerSuite({
 	name: 'TextInput',
 
-	construction() {
-		const textinput = new TextInput();
-		textinput.__setProperties__({
-			type: 'text',
-			placeholder: 'bar',
-			value: 'baz'
-		});
-
-		assert.strictEqual(textinput.properties.type, 'text');
-		assert.strictEqual(textinput.properties.placeholder, 'bar');
-		assert.strictEqual(textinput.properties.value, 'baz');
+	beforeEach() {
+		widget = harness(TextInput);
 	},
 
-	'default node attributes'() {
-		const textinput = new TextInput();
-		let vnode = <VNode> textinput.__render__();
-
-		assert.strictEqual(vnode.children![0].children![0].vnodeSelector, 'input');
-		assert.strictEqual(vnode.children![0].children![0].properties!.type, 'text');
-
-		textinput.__setProperties__({
-			type: 'email'
-		});
-		vnode = <VNode> textinput.__render__();
-
-		assert.strictEqual(vnode.children![0].children![0].properties!.type, 'email');
+	afterEach() {
+		widget.destroy();
 	},
+
+	simple() {
+		widget.expectRender(v('div', {
+			classes: widget.classes(css.root)
+		}, [
+			v('div', { classes: widget.classes(css.inputWrapper) }, [
+				v('input', {
+					'aria-controls': undefined,
+					'aria-describedby': undefined,
+					'aria-invalid': null,
+					'aria-readonly': null,
+					bind: true,
+					classes: widget.classes(css.input),
+					disabled: undefined,
+					maxlength: null,
+					minlength: null,
+					name: undefined,
+					placeholder: undefined,
+					readOnly: undefined,
+					required: undefined,
+					type: 'text',
+					value: undefined,
+					onblur: widget.listener,
+					onchange: widget.listener,
+					onclick: widget.listener,
+					onfocus: widget.listener,
+					oninput: widget.listener,
+					onkeydown: widget.listener,
+					onkeypress: widget.listener,
+					onkeyup: widget.listener,
+					onmousedown: widget.listener,
+					onmouseup: widget.listener,
+					ontouchstart: widget.listener,
+					ontouchend: widget.listener,
+					ontouchcancel: widget.listener
+				})
+			])
+		]));
+	},
+
+	'properties and attributes'() {
+		const properties = {
+			controls: 'foo',
+			describedBy: 'bar',
+			disabled: true,
+			formId: 'baz',
+			invalid: true,
+			maxLength: 10,
+			minLength: 5,
+			name: 'qux',
+			placeholder: 'xyx',
+			readOnly: true,
+			required: true,
+			type: 'email',
+			value: 'zxz'
+		};
+		const expected = v('div', {
+			classes: widget.classes(css.root, css.disabled, css.invalid, css.readonly, css.required)
+		}, [
+			v('div', { classes: widget.classes(css.inputWrapper) }, [
+				v('input', {
+					'aria-controls': properties.controls,
+					'aria-describedby': properties.describedBy,
+					'aria-invalid': 'true',
+					'aria-readonly': 'true',
+					bind: true,
+					classes: widget.classes(css.input),
+					disabled: properties.disabled,
+					maxlength: String(properties.maxLength),
+					minlength: String(properties.minLength),
+					name: properties.name,
+					placeholder: properties.placeholder,
+					readOnly: properties.readOnly,
+					required: properties.required,
+					type: properties.type,
+					value: properties.value,
+					onblur: widget.listener,
+					onchange: widget.listener,
+					onclick: widget.listener,
+					onfocus: widget.listener,
+					oninput: widget.listener,
+					onkeydown: widget.listener,
+					onkeypress: widget.listener,
+					onkeyup: widget.listener,
+					onmousedown: widget.listener,
+					onmouseup: widget.listener,
+					ontouchstart: widget.listener,
+					ontouchend: widget.listener,
+					ontouchcancel: widget.listener
+				})
+			])
+		]);
+
+		widget.setProperties(<any> properties);
+		widget.expectRender(expected);
+	}/*,
 
 	'correct node attributes'() {
 		const textinput = new TextInput();
@@ -98,25 +181,21 @@ registerSuite({
 		vnode = <VNode> textinput.__render__();
 		assert.isFalse(vnode.properties!.classes![css.valid]);
 		assert.isFalse(vnode.properties!.classes![css.invalid]);
-	},
+	}*/,
 
 	events() {
-		let blurred = false,
-				changed = false,
-				clicked = false,
-				focused = false,
-				input = false,
-				keydown = false,
-				keypress = false,
-				keyup = false,
-				mousedown = false,
-				mouseup = false,
-				touchstart = false,
-				touchend = false,
-				touchcancel = false;
+		let blurred = false;
+		let changed = false;
+		let clicked = false;
+		let focused = false;
+		let input = false;
+		let keydown = false;
+		let keypress = false;
+		let keyup = false;
+		let mousedown = false;
+		let mouseup = false;
 
-		const textinput = new TextInput();
-		textinput.__setProperties__({
+		widget.setProperties({
 			onBlur: () => { blurred = true; },
 			onChange: () => { changed = true; },
 			onClick: () => { clicked = true; },
@@ -126,37 +205,55 @@ registerSuite({
 			onKeyPress: () => { keypress = true; },
 			onKeyUp: () => { keyup = true; },
 			onMouseDown: () => { mousedown = true; },
-			onMouseUp: () => { mouseup = true; },
+			onMouseUp: () => { mouseup = true; }
+		});
+
+		widget.sendEvent('blur', { selector: 'input' });
+		assert.isTrue(blurred, 'blur event should be handled');
+		widget.sendEvent('change', { selector: 'input' });
+		assert.isTrue(changed, 'change event should be handled');
+		widget.sendEvent('click', { selector: 'input' });
+		assert.isTrue(clicked, 'click event should be handled');
+		widget.sendEvent('focus', { selector: 'input' });
+		assert.isTrue(focused, 'focus event should be handled');
+		widget.sendEvent('input', { selector: 'input' });
+		assert.isTrue(input, 'input event should be handled');
+		widget.sendEvent('keydown', { selector: 'input' });
+		assert.isTrue(keydown, 'keydown event should be handled');
+		widget.sendEvent('keypress', { selector: 'input' });
+		assert.isTrue(keypress, 'keypress event should be handled');
+		widget.sendEvent('keyup', { selector: 'input' });
+		assert.isTrue(keyup, 'keyup event should be handled');
+		widget.sendEvent('mousedown', { selector: 'input' });
+		assert.isTrue(mousedown, 'mousedown event should be handled');
+		widget.sendEvent('mouseup', { selector: 'input' });
+		assert.isTrue(mouseup, 'mouseup event should be handled');
+	},
+
+	'touch events'(this: Test) {
+		// TODO: this should be centralized & standardized somewhere
+		const hasTouch = has('host-node') || 'ontouchstart' in document ||
+			('onpointerdown' in document && navigator.maxTouchPoints > 0);
+
+		if (!hasTouch) {
+			this.skip('Touch events not supported');
+		}
+
+		let touchstart = false;
+		let touchend = false;
+		let touchcancel = false;
+
+		widget.setProperties({
 			onTouchStart: () => { touchstart = true; },
 			onTouchEnd: () => { touchend = true; },
 			onTouchCancel: () => { touchcancel = true; }
 		});
 
-		(<any> textinput)._onBlur(<FocusEvent> {});
-		assert.isTrue(blurred);
-		(<any> textinput)._onChange(<Event> {});
-		assert.isTrue(changed);
-		(<any> textinput)._onClick(<MouseEvent> {});
-		assert.isTrue(clicked);
-		(<any> textinput)._onFocus(<FocusEvent> {});
-		assert.isTrue(focused);
-		(<any> textinput)._onInput(<Event> {});
-		assert.isTrue(input);
-		(<any> textinput)._onKeyDown(<KeyboardEvent> {});
-		assert.isTrue(keydown);
-		(<any> textinput)._onKeyPress(<KeyboardEvent> {});
-		assert.isTrue(keypress);
-		(<any> textinput)._onKeyUp(<KeyboardEvent> {});
-		assert.isTrue(keyup);
-		(<any> textinput)._onMouseDown(<MouseEvent> {});
-		assert.isTrue(mousedown);
-		(<any> textinput)._onMouseUp(<MouseEvent> {});
-		assert.isTrue(mouseup);
-		(<any> textinput)._onTouchStart(<TouchEvent> {});
-		assert.isTrue(touchstart);
-		(<any> textinput)._onTouchEnd(<TouchEvent> {});
-		assert.isTrue(touchend);
-		(<any> textinput)._onTouchCancel(<TouchEvent> {});
+		widget.sendEvent('touchcancel', { selector: 'input' });
 		assert.isTrue(touchcancel);
+		widget.sendEvent('touchend', { selector: 'input' });
+		assert.isTrue(touchend);
+		widget.sendEvent('touchstart', { selector: 'input' });
+		assert.isTrue(touchstart);
 	}
 });
