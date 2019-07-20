@@ -9,7 +9,8 @@ import * as baseCss from '../../../common/styles/base.m.css';
 import { uuid } from '@dojo/framework/core/util';
 
 const axe = services.axe;
-const CLICK_WAIT_TIMEOUT = 500;
+const CLICK_WAIT_TIMEOUT = 5000;
+const POLL_INTERVAL = 20;
 
 function getPage(remote: Remote) {
 	return remote
@@ -68,7 +69,7 @@ registerSuite('TextInput', {
 					},
 					[css.root, css.input],
 					CLICK_WAIT_TIMEOUT,
-					20
+					POLL_INTERVAL
 				)
 			)
 			.then((isEqual) => {
