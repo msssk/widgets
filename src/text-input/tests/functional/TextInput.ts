@@ -3,11 +3,13 @@ const { assert } = intern.getPlugin('chai');
 
 import { Remote } from 'intern/lib/executors/Node';
 import { services } from '@theintern/a11y';
+import pollUntilTruthy from '@theintern/leadfoot/helpers/pollUntilTruthy';
 import * as css from '../../../theme/text-input.m.css';
 import * as baseCss from '../../../common/styles/base.m.css';
 import { uuid } from '@dojo/framework/core/util';
 
 const axe = services.axe;
+const CLICK_WAIT_TIMEOUT = 500;
 
 function getPage(remote: Remote) {
 	return remote
@@ -25,10 +27,9 @@ registerSuite('TextInput', {
 			.then(({ height, width }) => {
 				assert.isAbove(height, 0, 'The height of the input should be greater than zero.');
 				assert.isAbove(width, 0, 'The width of the input should be greater than zero.');
-			})
-			.end()
-			.end();
+			});
 	},
+
 	'TextInput label should be as defined'() {
 		return getPage(this.remote)
 			.findByCssSelector(`#example-text .${css.root}`)
@@ -37,6 +38,7 @@ registerSuite('TextInput', {
 				assert.strictEqual(text, 'Name');
 			});
 	},
+
 	'TextInput should gain focus when clicking on the label'() {
 		const {
 			remote: {
@@ -55,17 +57,25 @@ registerSuite('TextInput', {
 					return element.click();
 				}
 			})
-			.end()
-			.sleep(250)
-			.execute(
-				`return document.activeElement === document.querySelector('#example-text .${
-					css.root
-				} .${css.input}');`
+			.then(
+				pollUntilTruthy(
+					function(rootClass, inputClass) {
+						const inputNode = document.querySelector(
+							'#example-text .' + rootClass + ' .' + inputClass
+						);
+
+						return document.activeElement === inputNode ? true : null;
+					},
+					[css.root, css.input],
+					CLICK_WAIT_TIMEOUT,
+					20
+				)
 			)
 			.then((isEqual) => {
 				assert.isTrue(isEqual);
 			});
 	},
+
 	'TextInput should allow input to be typed'() {
 		const testInput = 'test text';
 		return getPage(this.remote)
@@ -74,9 +84,9 @@ registerSuite('TextInput', {
 			.getProperty('value')
 			.then((value: string) => {
 				assert.strictEqual(value, testInput);
-			})
-			.end();
+			});
 	},
+
 	'Hidden label should not be displayed'() {
 		return getPage(this.remote)
 			.findByCssSelector(`#example-hidden-label .${css.root}`)
@@ -87,10 +97,9 @@ registerSuite('TextInput', {
 			.findByCssSelector(`.${baseCss.visuallyHidden}`)
 			.then((element) => {
 				assert(element, 'element with specified class "visuallyHidden" should exist.`');
-			})
-			.end()
-			.end();
+			});
 	},
+
 	'Disabled TextInput should not allow input to be typed'() {
 		const initValue = 'Initial value';
 		return getPage(this.remote)
@@ -102,16 +111,16 @@ registerSuite('TextInput', {
 			.getProperty('value')
 			.then((value: string) => {
 				assert.strictEqual(value, initValue);
-			})
-			.end();
+			});
 	},
+
 	'Validated TextInput should update style based on validity'() {
 		const validText = 'foo';
 		const invalidText = 'foobar';
 
 		return getPage(this.remote)
 			.findByCssSelector(`#example-validated .${css.root}`)
-			.getProperty('className')
+			.getAttribute('class')
 			.then((className: string) => {
 				assert.notInclude(className, css.invalid);
 				assert.notInclude(className, css.valid);
@@ -120,22 +129,19 @@ registerSuite('TextInput', {
 			.click()
 			.type(validText)
 			.end()
-			.sleep(10)
-			.getProperty('className')
+			.findByCssSelector(`.${css.valid}`)
+			.getAttribute('class')
 			.then((className: string) => {
 				assert.notInclude(className, css.invalid);
-				assert.include(className, css.valid);
 			})
 			.findByCssSelector(`.${css.input}`)
 			.type(invalidText)
 			.end()
-			.sleep(10)
-			.getProperty('className')
+			.findByCssSelector(`.${css.invalid}`)
+			.getAttribute('class')
 			.then((className: string) => {
 				assert.notInclude(className, css.valid);
-				assert.include(className, css.invalid);
-			})
-			.end();
+			});
 	},
 
 	'check accessibility'() {
